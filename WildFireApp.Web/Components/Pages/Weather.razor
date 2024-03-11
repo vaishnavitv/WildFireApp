@@ -74,6 +74,8 @@ else
                 <th>Year</th>
                 <th>Status</th>
                 <th>Cause</th>
+                <th>Coordinates</th>
+                <th>Incident</th>
             </tr>
         </thead>
         <tbody>
@@ -86,6 +88,9 @@ else
                     <td>@wildfireResult.properties.FIRE_YEAR</td>
                     <td>@wildfireResult.properties.FIRE_STATUS</td>
                     <td>@wildfireResult.properties.FIRE_CAUSE</td>
+                    <td>@wildfireResult.geometry.coordinates[0], @wildfireResult.geometry.coordinates[1]</td>
+                    <td>@wildfireResult.properties.INCIDENT_NAME</td>
+                        
                 </tr>
             }
         </tbody>
