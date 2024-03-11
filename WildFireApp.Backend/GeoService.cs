@@ -1,17 +1,13 @@
 ﻿using WildFireApp.Backend.Model;
-using static WildFireApp.Backend.Model.GeoServer;
 using Newtonsoft.Json;
-using System;
-using System.Data;
-using System.Dynamic;
-using System.Formats.Asn1;
 
+using static WildFireApp.Backend.Model.GeoServer;
 
 namespace WildFireApp.Backend
 {
     public class GeoService
     {
-        public async Task<WildFire> GetWildFireDetails()
+        public async Task<WildFire> GetAllWildFireResults()
         {
             var response = string.Empty;
             using (var client = new HttpClient())
@@ -65,25 +61,15 @@ namespace WildFireApp.Backend
         }
 
 
-        public void DownloadWildFireResults(string data)
+        public async Task<string> DownloadWildFireResults(string data, string delimiter)
         {
-
+            string csv = "";
+            csv = await Task.Run(() => {
+                return new CSVBuilder().JsonToCsv(data, delimiter);
+            });
+            return csv;
         }
 
-       
-
-        //public  DataTable? UseNewtonsoftJson(string sampleJson )
-        //{
-        //    DataTable? dataTable = new();
-        //    if (string.IsNullOrWhiteSpace(sampleJson))
-        //    {
-        //        return dataTable;
-        //    }
-        //    var dataSet = JsonConvert.DeserializeObject<DataSet>(sampleJson);
-        //     dataTable = dataSet.Tables[0];
-
-        //  //  dataTable = JsonConvert.DeserializeObject<DataTable>(sampleJson);
-        //    return dataTable;
-        //}
+      
     }
 }

@@ -10,7 +10,7 @@ namespace WildFireApp.Web
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
+                            .AddInteractiveServerComponents();
 
             var app = builder.Build();
 
