@@ -9,6 +9,8 @@
 
 <div>
     <EditForm Model="userSelection" OnSubmit="ChangeListings" FormName="UserSelectionForm">
+
+        <label>Year</label>
         <div>
             <InputSelect @bind-Value="userSelection!.year">
                 @foreach (var year in years)
@@ -17,6 +19,27 @@
                 }
             </InputSelect>
         </div>
+
+        <label>Status</label>
+        <div>
+            <InputSelect @bind-Value="userSelection!.status">
+                @foreach (var status in statuses)
+                {
+                    <option value=@status>@status</option>
+                }
+            </InputSelect>
+        </div>
+
+        <label>Cause</label>
+        <div>
+            <InputSelect @bind-Value="userSelection!.cause">
+                @foreach (var cause in causes)
+                {
+                    <option value=@cause>@cause</option>
+                }
+            </InputSelect>
+        </div>
+
         <div>
             <button type="submit">Submit</button>
         </div>
@@ -59,12 +82,17 @@ else
     private GeoService service = new GeoService();
 
     //TODO: Write code to use last 5 Years incl. Present Year.
-    private List<int> years = [2024, 2023, 2022, 2021, 2020];
+    //TODO: Convert this to enums
+    private List<int> years = [2023];
+    private List<string> statuses = ["Out", "Under Control", ""];
+    private List<string> causes = ["Lightning", "Person", "Unknown", ""];
 
     //User Selection.
     class UserSelection
     {
         public int year { get; set; }
+        public string status { get; set; }
+        public string cause { get; set; }
     }
     [SupplyParameterFromForm]
     private UserSelection? userSelection { get; set; }
@@ -74,20 +102,33 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        userSelection ??= new() { year = -1 };
-        await ChangeListings();
+        userSelection ??= new UserSelection() {
+                year = -1,
+                status = "",
+                cause = ""
+        };
+    await ChangeListings();
     }
 
     async Task ChangeListings()
     {
+        Dictionary<string, Object> userFilter = new Dictionary<string, object>();
         if (userSelection?.year != -1)
         {
-            Dictionary<string, Object> userFilter = new Dictionary<string, object>();
             userFilter.Add("FIRE_YEAR", userSelection.year);
-            wildfire = await service.GetWildFireResultsByMultipleFilters(userFilter);
         }
-        else
+        if (!String.IsNullOrEmpty(userSelection?.cause))
         {
+            userFilter.Add("FIRE_CAUSE", userSelection.cause);
+        }
+        if (!String.IsNullOrEmpty(userSelection?.status))
+        {
+            userFilter.Add("FIRE_STATUS", userSelection.status);
+        }
+
+        if(userFilter.Count > 0) {
+            wildfire = await service.GetWildFireResultsByMultipleFilters(userFilter);
+        } else {
             wildfire = await service.GetAllWildFireResults();
         }
     }

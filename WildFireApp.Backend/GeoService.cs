@@ -12,7 +12,8 @@ namespace WildFireApp.Backend
             var response = string.Empty;
             using (var client = new HttpClient())
             {
-                HttpResponseMessage result = await client.GetAsync(new URLBuilder().GetUrl());
+                var urlToFetch = new URLBuilder().GetUrl();
+                HttpResponseMessage result = await client.GetAsync(urlToFetch);
                 if (result.IsSuccessStatusCode)
                 {
                     response = await result.Content.ReadAsStringAsync();
@@ -38,7 +39,8 @@ namespace WildFireApp.Backend
 
             using (var client = new HttpClient())
             {
-                HttpResponseMessage result = await client.GetAsync(new URLBuilder().AddCQL(customFilters).GetUrl());
+                var urlToFetch = new URLBuilder().AddCQL(customFilters).GetUrl();
+                HttpResponseMessage result = await client.GetAsync(urlToFetch);
                 if (result.IsSuccessStatusCode)
                 {
                     response = await result.Content.ReadAsStringAsync();
@@ -59,17 +61,6 @@ namespace WildFireApp.Backend
             return rootObject;
 
         }
-
-
-        public async Task<string> DownloadWildFireResults(string data, string delimiter)
-        {
-            string csv = "";
-            csv = await Task.Run(() => {
-                return new CSVBuilder().JsonToCsv(data, delimiter);
-            });
-            return csv;
-        }
-
       
     }
 }

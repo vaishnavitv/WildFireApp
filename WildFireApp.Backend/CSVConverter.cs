@@ -12,20 +12,18 @@ using WildFireApp.Backend.Model;
 
 namespace WildFireApp.Backend
 {
-    public class CSVBuilder
+    public class CSVConverter
     {
-        public string JsonToCsv(string jsonContent, string delimeter)
+        public string JsonToCsv(GeoServer.WildFire givenResults)
         {
             var csvText = "";
-            var response = JsonConvert.DeserializeObject<GeoServer.WildFire>(jsonContent);
 
             using (TextWriter writer = new StringWriter())
             {
                 CsvConfiguration csvConfiguration = new CsvConfiguration(System.Globalization.CultureInfo.CurrentCulture);
-                csvConfiguration.Delimiter = delimeter;
                 using (var csv = new CsvHelper.CsvWriter(writer, csvConfiguration))
                 {
-                    csv.WriteRecords(response.features);
+                    csv.WriteRecords(givenResults.features);
                 }
                 csvText = writer.ToString();
             }
