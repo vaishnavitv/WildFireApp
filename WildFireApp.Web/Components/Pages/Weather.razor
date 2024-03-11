@@ -1,5 +1,6 @@
 ﻿@page "/weather"
 @attribute [StreamRendering]
+@using WildFireApp.Backend.Data;
 @using WildFireApp.Backend.Model;
 @using WildFireApp.Backend;
 
@@ -13,7 +14,7 @@
         <div>
             <label>Year</label>
             <InputSelect @bind-Value="userSelection!.year">
-                @foreach (var year in years)
+                @foreach (var year in serviceData.AllYears)
                 {
                     <option value=@year>@year</option>
                 }
@@ -23,7 +24,8 @@
         <div>
             <label>Status</label>
             <InputSelect @bind-Value="userSelection!.status">
-                @foreach (var status in statuses)
+                <option value=""></option>
+                @foreach (var status in serviceData.AllStatuses)
                 {
                     <option value=@status>@status</option>
                 }
@@ -33,9 +35,21 @@
         <div>
             <label>Cause</label>
             <InputSelect @bind-Value="userSelection!.cause">
-                @foreach (var cause in causes)
+                <option value=""></option>
+                @foreach (var cause in serviceData.AllCauses)
                 {
                     <option value=@cause>@cause</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div>
+            <label>Geographic Location</label>
+            <InputSelect @bind-Value="userSelection!.geoLocation">
+                <option value=""></option>
+                @foreach (var geoLocation in serviceData.AllGeographicLocations)
+                {
+                    <option value=@geoLocation>@geoLocation</option>
                 }
             </InputSelect>
         </div>
@@ -56,6 +70,7 @@ else
         <thead>
             <tr>
                 <th>Fire #</th>
+                <th>Geographic Location</th>
                 <th>Year</th>
                 <th>Status</th>
                 <th>Cause</th>
@@ -67,6 +82,7 @@ else
             {
                 <tr>
                     <td>@wildfireResult.properties.FIRE_ID</td>
+                    <td>@wildfireResult.properties.GEOGRAPHIC_DESCRIPTION</td>
                     <td>@wildfireResult.properties.FIRE_YEAR</td>
                     <td>@wildfireResult.properties.FIRE_STATUS</td>
                     <td>@wildfireResult.properties.FIRE_CAUSE</td>
@@ -77,14 +93,11 @@ else
 }
 
 @code {
+    //GeoService Data
+    private GeoServiceData serviceData = new GeoServiceData();
+
     //GeoService.
     private GeoService service = new GeoService();
-
-    //TODO: Write code to use last 5 Years incl. Present Year.
-    //TODO: Convert this to enums
-    private List<int> years = [2023];
-    private List<string> statuses = ["Out", "Under Control", ""];
-    private List<string> causes = ["Lightning", "Person", "Unknown", ""];
 
     //User Selection.
     class UserSelection
@@ -92,7 +105,10 @@ else
         public int year { get; set; }
         public string status { get; set; }
         public string cause { get; set; }
+        public string geoLocation { get; set; }
     }
+
+    //Supply User Selection Instance from Form Data.
     [SupplyParameterFromForm]
     private UserSelection? userSelection { get; set; }
 
@@ -104,13 +120,15 @@ else
         userSelection ??= new UserSelection() {
                 year = -1,
                 status = "",
-                cause = ""
+                cause = "",
+                geoLocation = ""
         };
-    await ChangeListings();
+        await ChangeListings();
     }
 
     async Task ChangeListings()
     {
+        //Populate Backend User Filters.
         Dictionary<string, Object> userFilter = new Dictionary<string, object>();
         if (userSelection?.year != -1)
         {
@@ -124,7 +142,12 @@ else
         {
             userFilter.Add("FIRE_STATUS", userSelection.status);
         }
+        if (!String.IsNullOrEmpty(userSelection?.geoLocation))
+        {
+            userFilter.Add("GEOGRAPHIC_DESCRIPTION", userSelection.geoLocation);
+        }
 
+        //Populate Display List.
         if(userFilter.Count > 0) {
             wildfire = await service.GetWildFireResultsByMultipleFilters(userFilter);
         } else {
