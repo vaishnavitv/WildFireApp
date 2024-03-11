@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace WildFireApp.Backend
+namespace WildFireApp.Backend.Util
 {
     public class URLBuilder
     {
@@ -29,7 +29,7 @@ namespace WildFireApp.Backend
             queryParams.Add("cql_filter", new CQLBuilder().WithParameters(cqlParameters).ToQueryString());
             return this;
         }
-       
+
         private string ToQueryString()
         {
             StringBuilder sb = new StringBuilder("?");

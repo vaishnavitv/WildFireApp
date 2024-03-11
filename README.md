@@ -5,6 +5,26 @@ via HTTP and displays response based on parameters passed.
 
 Front end of the application is built with Blazor Pages in C#.
 
+## Architecture Choices Explained
+
+- Used .Net 8 as the Backend and Frontend Language.
+   - Rich and Expressive C# Language. 
+   - It also builds well for Linux and MacOS systems.
+   - Few Dependencies
+   - Statically Typed Code.
+- Using Docker to compile for Linux. Web Server Exposed on Ports 8080/8081 when running.
+- Not using a Database. It was possible to use a local Database (or)
+  Files for Caching, Storing Data.
+- However, Backend went into its own project and thus the Web Server can independantly
+  abstract the Data to the Display or API as appropriate. Backend can change Data Source too.
+- Not implementing any API routes. For this task, the idea is to use
+  best practices for dynamic Blazor based display with Server Side Rendering,
+  and Storing/Serializing/Deserializing Intermediary Data was avoided.
+- Overall I/O Reliability was tested by turning off the Network Connections to
+  see if any of the Backend Misbehaved.
+- Using JavaScript Streaming services to Download CSV. Helps us maintain a
+  stateful web application and re-use Server Side Data Objects.
+
 ## Requirements
 
 - Visual Studio 2022 [Windows Only] or Visual Studio Code [Everywhere]

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using WildFireApp.Backend;
+﻿using WildFireApp.Backend.Util;
 namespace WildFireApp.Tests;
 
 
@@ -7,13 +6,9 @@ namespace WildFireApp.Tests;
 [TestFixture]
 public class URIBuilderTests
 {
-    string fireStatus = "Out";
-    string fireCause = "Person";
-    string geographicDescription = "Goose Creek";
-    int fireyear = 2023;
 
     [Test]
-    [TestCase(2023,"Out","Lightning", "Goose Creek", @"FIRE_STATUS='Out' AND FIRE_CAUSE='Lightning' AND FIRE_YEAR=2023 AND GEOGRAPHIC_DESCRIPTION='Goose Creek'")]
+    [TestCase(2023, "Out", "Lightning", "Goose Creek", @"FIRE_STATUS='Out' AND FIRE_CAUSE='Lightning' AND FIRE_YEAR=2023 AND GEOGRAPHIC_DESCRIPTION='Goose Creek'")]
     public void CQLFilterTest(int fireYear, string fireStatus, string fireCause, string geographicDescription, string expectedOutput)
     {
         Dictionary<string, object> customFilters = new Dictionary<string, object>();

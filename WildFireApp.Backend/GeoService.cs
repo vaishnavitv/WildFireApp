@@ -1,66 +1,72 @@
-﻿using WildFireApp.Backend.Model;
-using Newtonsoft.Json;
-
+﻿using Newtonsoft.Json;
+using WildFireApp.Backend.Util;
 using static WildFireApp.Backend.Model.GeoServer;
 
 namespace WildFireApp.Backend
 {
     public class GeoService
     {
+        //TODO: Do away with Strings and use Streams Only.
         public async Task<WildFire> GetAllWildFireResults()
         {
+            WildFire rootObject = new WildFire();
             var response = string.Empty;
-            using (var client = new HttpClient())
+            try
             {
-                var urlToFetch = new URLBuilder().GetUrl();
-                HttpResponseMessage result = await client.GetAsync(urlToFetch);
-                if (result.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    response = await result.Content.ReadAsStringAsync();
+                    var urlToFetch = new URLBuilder().GetUrl();
+                    HttpResponseMessage result = await client.GetAsync(urlToFetch);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        response = await result.Content.ReadAsStringAsync();
+                    }
                 }
             }
-
-            if(string.IsNullOrEmpty(response))
-                return new WildFire();
-
-            WildFire rootObject = JsonConvert.DeserializeObject<WildFire>(response);
-
-            if(rootObject.numberReturned == 0)
+            catch (Exception _)
             {
-                return new WildFire();
+                //Ignore, we return next.
             }
+
+            if (string.IsNullOrEmpty(response))
+                return rootObject;
+
+            rootObject = JsonConvert.DeserializeObject<WildFire>(response);
 
             return rootObject;
         }
 
         public async Task<WildFire> GetWildFireResultsByMultipleFilters(Dictionary<string, object> customFilters)
         {
+            WildFire rootObject = new WildFire();
             var response = string.Empty;
 
-            using (var client = new HttpClient())
+            try
             {
-                var urlToFetch = new URLBuilder().AddCQL(customFilters).GetUrl();
-                HttpResponseMessage result = await client.GetAsync(urlToFetch);
-                if (result.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    response = await result.Content.ReadAsStringAsync();
+                    //TODO: Add Validation to Filters.
+                    var urlToFetch = new URLBuilder().AddCQL(customFilters).GetUrl();
+                    HttpResponseMessage result = await client.GetAsync(urlToFetch);
+                    if (result.IsSuccessStatusCode)
+                    {
+                        response = await result.Content.ReadAsStringAsync();
+                    }
                 }
+            }
+            catch (Exception _)
+            {
+                //Ignore, we return next.
             }
 
             if (string.IsNullOrEmpty(response))
-                return new WildFire();
+                return rootObject;
 
-            GeoServer.WildFire rootObject = JsonConvert.DeserializeObject<WildFire>(response);
-
-
-            if (rootObject != null && rootObject.numberReturned == 0)
-            {
-                return new WildFire();
-            }
+            rootObject = JsonConvert.DeserializeObject<WildFire>(response);
 
             return rootObject;
 
         }
-      
+
     }
 }

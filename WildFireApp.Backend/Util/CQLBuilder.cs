@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace WildFireApp.Backend
+namespace WildFireApp.Backend.Util
 {
     public class CQLBuilder
     {

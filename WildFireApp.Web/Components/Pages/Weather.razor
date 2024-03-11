@@ -5,6 +5,7 @@
 @using WildFireApp.Backend.Data;
 @using WildFireApp.Backend.Model;
 @using WildFireApp.Backend;
+@using WildFireApp.Backend.Util;
 @inject IJSRuntime JS
 
 <PageTitle>WildFire Data</PageTitle>
@@ -170,10 +171,10 @@ else
     {
         if (wildfire == null)
             return;
-        var fileName = "Download.csv";
-        //TODO: Convert this to Streaming Code to Conserve Memory.
-        var csvDataAsString = csvConverter.JsonToCsv(wildfire);
-        var csvDataAsBytes = Encoding.UTF8.GetBytes(csvDataAsString);
+        var fileName = $"Download-{UniqueID.getCurrentDateAndTime()}.csv";
+        using var textWriter = new StringWriter();
+        csvConverter.JsonToCsv(wildfire, textWriter);
+        var csvDataAsBytes = Encoding.UTF8.GetBytes(textWriter.ToString());
         using var streamRef = new DotNetStreamReference(stream: new MemoryStream(csvDataAsBytes));
         await JS.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
