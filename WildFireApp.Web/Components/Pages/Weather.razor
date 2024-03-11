@@ -135,7 +135,10 @@ else
                 cause = "",
                 geoLocation = ""
         };
-        await ChangeListings();
+        if(wildfire == null)
+        {
+            await ChangeListings();
+        }
     }
 
     async Task ChangeListings()
@@ -160,7 +163,8 @@ else
         }
 
         //Populate Display List.
-        if(userFilter.Count > 0) {
+        if (userFilter.Count > 0)
+        {
             wildfire = await service.GetWildFireResultsByMultipleFilters(userFilter);
         } else {
             wildfire = await service.GetAllWildFireResults();
