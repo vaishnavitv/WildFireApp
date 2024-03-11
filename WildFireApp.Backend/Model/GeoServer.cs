@@ -52,11 +52,13 @@ namespace WildFireApp.Backend.Model
             public string RESPONSE_TYPE_DESC { get; set; }
             public string IGNITION_DATE { get; set; }
             public string FIRE_OUT_DATE { get; set; }
+            //TODO : Convert to enum
             public string FIRE_STATUS { get; set; }
             public string FIRE_CAUSE { get; set; }
             public int FIRE_CENTRE { get; set; }
             public int ZONE { get; set; }
             public int FIRE_ID { get; set; }
+            //TODO : Convert to enum
             public string FIRE_TYPE { get; set; }
             public string INCIDENT_NAME { get; set; }
             public string GEOGRAPHIC_DESCRIPTION { get; set; }
