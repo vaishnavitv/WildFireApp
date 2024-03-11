@@ -1,5 +1,5 @@
-﻿@page "/weather"
-@rendermode InteractiveServer
+﻿@page "/weatherDownload"
+@attribute [StreamRendering]
 @using System.IO;
 @using System.Text;
 @using WildFireApp.Backend.Data;
@@ -14,6 +14,7 @@
 <div>
     <EditForm Model="userSelection" OnSubmit="ChangeListings" FormName="UserSelectionForm">
 
+        <div>
             <label>Year</label>
             <InputSelect @bind-Value="userSelection!.year">
                 @foreach (var year in serviceData.AllYears)
@@ -21,7 +22,9 @@
                     <option value=@year>@year</option>
                 }
             </InputSelect>
+        </div>
 
+        <div>
             <label>Status</label>
             <InputSelect @bind-Value="userSelection!.status">
                 <option value=""></option>
@@ -30,7 +33,9 @@
                     <option value=@status>@status</option>
                 }
             </InputSelect>
+        </div>
 
+        <div>
             <label>Cause</label>
             <InputSelect @bind-Value="userSelection!.cause">
                 <option value=""></option>
@@ -39,6 +44,7 @@
                     <option value=@cause>@cause</option>
                 }
             </InputSelect>
+        </div>
 
         <div>
             <label>Geographic Location</label>
@@ -57,8 +63,6 @@
     </EditForm>
 </div>
 
-<hr />
-
 @if (wildfire == null)
 {
     <p><em>Loading Results ...</em></p>
@@ -66,7 +70,7 @@
 else
 {
     <button @onclick="DownloadDataAsCsv">
-        CSV ⬇️
+        Download ⬇️
     </button>
     <table class="table">
         <thead>
@@ -81,7 +85,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @if(wildfire?.features != null) {
+            @if(wildfire?.features != null)
             foreach (var wildfireResult in wildfire.features)
             {
                 <tr>
@@ -92,8 +96,8 @@ else
                     <td>@wildfireResult.properties.FIRE_CAUSE</td>
                     <td>@wildfireResult.geometry.coordinates[0], @wildfireResult.geometry.coordinates[1]</td>
                     <td>@wildfireResult.properties.INCIDENT_NAME</td>
+                        
                 </tr>
-                }
             }
         </tbody>
     </table>
@@ -116,7 +120,6 @@ else
         public string status { get; set; }
         public string cause { get; set; }
         public string geoLocation { get; set; }
-        public bool isDownload { get; set; }
     }
 
     //Supply User Selection Instance from Form Data.
