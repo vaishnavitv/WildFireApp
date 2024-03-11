@@ -5,13 +5,13 @@ via HTTP and displays response based on parameters passed.
 
 Front end of the application is built with Blazor Pages in C#.
 
-### Requirements
+## Requirements
 
-- Visual Studio 2022
+- Visual Studio 2022 [Windows Only] or Visual Studio Code [Everywhere]
 - .Net 8.0
-- Docker Desktop: Installed and configured to run on WSL2, with a working Distribution (Debian Preferred)
+- Docker Desktop - On Windows, also configured to run on WSL2, with a working Distribution (Debian Preferred)
 
-### Dependencies
+### Package Dependencies
 
 - CsvHelper (31.0.2)
 - Newtonsoft.Json (13.0.3)
@@ -21,16 +21,34 @@ Front end of the application is built with Blazor Pages in C#.
 Download WildFireApp Solution at a location where
 write permissions are available
 
-### Building the Image
+### Running The App
 
 ```shell
-docker build -t wildfireapp:latest -f ./WildFireApp.Web/Dockerfile .
+dotnet run --project WildFireApp.Web
 ```
 
-### Running / Deploying the Docker Image
+### Building the App for Publishing
 
 ```shell
-docker run -p 8080:8080 -p 8081:8081 --rm wildfireapp:latest --name wildfireapp
+dotnet publish
+```
+
+### Running All Tests
+
+```shell
+dotnet test
+```
+
+### Building the Docker Image
+
+```shell
+docker build -t wildfireapp:latest -f WildFireApp.Web/Dockerfile .
+```
+
+### Running the Docker Image
+
+```shell
+docker run -p 8080:8080 -p 8081:8081 --rm --name wildfireapp wildfireapp:latest
 ```
 
 Normally you would build and publish the Docker image to

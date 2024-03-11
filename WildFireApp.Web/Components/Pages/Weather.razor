@@ -3,15 +3,15 @@
 @using WildFireApp.Backend.Model;
 @using WildFireApp.Backend;
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>WildFire Data</PageTitle>
 
-<h1>Wildfire Data</h1>
+<h1>WildFire Data</h1>
 
 <div>
     <EditForm Model="userSelection" OnSubmit="ChangeListings" FormName="UserSelectionForm">
 
-        <label>Year</label>
         <div>
+            <label>Year</label>
             <InputSelect @bind-Value="userSelection!.year">
                 @foreach (var year in years)
                 {
@@ -20,8 +20,8 @@
             </InputSelect>
         </div>
 
-        <label>Status</label>
         <div>
+            <label>Status</label>
             <InputSelect @bind-Value="userSelection!.status">
                 @foreach (var status in statuses)
                 {
@@ -30,8 +30,8 @@
             </InputSelect>
         </div>
 
-        <label>Cause</label>
         <div>
+            <label>Cause</label>
             <InputSelect @bind-Value="userSelection!.cause">
                 @foreach (var cause in causes)
                 {
@@ -44,7 +44,6 @@
             <button type="submit">Submit</button>
         </div>
     </EditForm>
-    <label>Change Year</label>
 </div>
 
 @if (wildfire == null)
