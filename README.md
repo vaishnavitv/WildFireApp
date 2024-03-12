@@ -47,6 +47,14 @@ write permissions are available
 dotnet run --project WildFireApp.Web
 ```
 
+### Using the App
+
+Once you run it, open it in the browser. Navigate to the 'WildFire Data'
+page. Change the default filters and hit 'Submit'. To download this table
+data as **CSV**, hit 'CSV ⬇️'.
+
+![WildFire App](Images/WildFireApp-UI-Screenshot.png)
+
 ### Building the App for Publishing
 
 ```shell
@@ -62,15 +70,22 @@ dotnet test
 ### Building the Docker Image
 
 ```shell
-docker build -t wildfireapp:latest -f WildFireApp.Web/Dockerfile .
-```
-
-### Running the Docker Image
-
-```shell
-docker run -p 8080:8080 -p 8081:8081 --rm --name wildfireapp wildfireapp:latest
+docker build -t vaishnavitv/wildfireapp:latest -f WildFireApp.Web/Dockerfile .
 ```
 
 Normally you would build and publish the Docker image to
 a registry, and you would pull it before running in the Server
 Environment.
+
+### Running the Docker Image
+
+A copy of this Docker image has already been published
+to the Docker repository, just run this:
+
+```shell
+docker run -p 8080:8080 -p 8081:8081 --rm --name wildfireapp vaishnavitv/wildfireapp:latest
+```
+
+## Feedback
+
+Reach out to me for any/all feedback and suggestions.
